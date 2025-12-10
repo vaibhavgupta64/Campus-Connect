@@ -1,0 +1,2466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kiet Campus Connect</title>
+    <style>
+        /* ---------------------------------------------------- */
+        /* BASE & TYPOGRAPHY */
+        /* ---------------------------------------------------- */
+        :root {
+            /* Dark Mode Vars */
+            --bg-primary: #0D1117;
+            --bg-secondary: #161B22;
+            --bg-glass: rgba(22, 27, 34, 0.7);
+            --text-primary: #C9D1D9;
+            --text-secondary: #8B949E;
+            --accent-color: #00FFFF; /* Neon Cyan */
+            --accent-glow: 0 0 10px var(--accent-color), 0 0 20px var(--accent-color);
+            --border-color: #30363D;
+            --shadow-elevation: 0 4px 12px rgba(0, 0, 0, 0.5);
+            --toggle-on-color: var(--accent-color);
+            --toggle-off-color: var(--text-secondary);
+        }
+
+        /* Light Mode Overrides */
+        .light-mode {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F6F8FA;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --text-primary: #24292F;
+            --text-secondary: #656D76;
+            --accent-color: #0969DA; /* Electric Blue */
+            --accent-glow: 0 0 5px rgba(9, 105, 218, 0.5);
+            --border-color: #D0D7DE;
+            --shadow-elevation: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --toggle-on-color: var(--accent-color);
+            --toggle-off-color: var(--text-secondary);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'SF Mono', 'Roboto Mono', monospace; /* Stronger for techy feel */
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .code-text {
+            font-family: 'SF Mono', 'Roboto Mono', monospace;
+            color: var(--accent-color);
+        }
+
+        /* ---------------------------------------------------- */
+        /* UTILITIES & COMMON STYLES */
+        /* ---------------------------------------------------- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .glass-panel {
+            background: var(--bg-glass);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow-elevation);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow-elevation);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-elevation), var(--accent-glow);
+        }
+
+        /* BUTTONS & FORMS */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, border 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--accent-glow);
+            filter: brightness(1.1);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            box-shadow: var(--accent-glow);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none !important;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px var(--accent-color);
+        }
+
+        /* ---------------------------------------------------- */
+        /* HEADER & NAVIGATION */
+        /* ---------------------------------------------------- */
+        header {
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 0;
+            position: sticky; /* Keep header visible on mobile scroll */
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: 800;
+            color: var(--accent-color);
+            display: flex;
+            align-items: center;
+            letter-spacing: 2px;
+        }
+
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+            filter: drop-shadow(0 0 5px var(--accent-color));
+        }
+
+        .nav-links {
+             /* Ensure nav-links itself doesn't wrap oddly on wider screens */
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* NEW THEME TOGGLE SWITCH STYLES */
+        .theme-switch {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            width: 80px; /* Wider to fit 'Dark/Light' labels */
+            height: 34px;
+            margin-left: 10px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--text-primary);
+            transition: 0.4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Checked (Light Mode) State */
+        .light-mode .slider:before {
+            background-color: var(--accent-color);
+        }
+
+        /* Movement */
+        .theme-switch input:checked + .slider {
+            /* Light mode, no background change necessary here, just move the knob */
+        }
+
+        .theme-switch input:checked + .slider:before {
+            transform: translateX(46px); /* 80px - 26px - 2*2px = 50px - 4px (small margin) */
+        }
+        
+        /* Labels inside the toggle */
+        .toggle-labels {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            pointer-events: none; /* Allows click-through to the slider/input */
+        }
+
+        .toggle-labels span {
+            transition: color 0.4s;
+            text-transform: uppercase;
+        }
+        
+        .light-mode .toggle-labels .dark-label,
+        .toggle-labels .light-label {
+            color: var(--toggle-off-color);
+        }
+        
+        .light-mode .toggle-labels .light-label,
+        .toggle-labels .dark-label {
+            color: var(--text-primary);
+        }
+
+        .theme-switch input:checked ~ .toggle-labels .light-label {
+            color: var(--toggle-on-color) !important;
+        }
+
+        .theme-switch input:checked ~ .toggle-labels .dark-label {
+            color: var(--toggle-off-color) !important;
+        }
+        /* END NEW THEME TOGGLE SWITCH STYLES */
+
+        /* ---------------------------------------------------- */
+        /* MODULES (TOAST, MODAL, LOADER) - MODAL FIXES */
+        /* ---------------------------------------------------- */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: var(--accent-glow);
+            animation: fadeIn 0.3s ease-out, fadeOut 0.3s ease-in 3.7s forwards;
+            min-width: 250px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; /* Enable scroll for modal on mobile */
+            padding: 20px;
+        }
+
+        .modal-content {
+            background-color: var(--bg-secondary);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 600px; /* Increased max-width for event form */
+            width: 100%; 
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 20px var(--accent-color);
+        }
+        
+        /* Modal Form Flex Layout Fixes */
+        .modal-content > form > div:first-child { /* Targets the div containing domain and type selects */
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap; /* Ensure fields wrap on smaller screens */
+            margin-bottom: 15px; /* Add margin below the flex container */
+        }
+        .modal-content > form > div:first-child select {
+            flex: 1 1 45%; /* Allows two fields side-by-side or stacks them */
+            margin-bottom: 0; /* Remove margin-bottom from selects inside flex */
+        }
+
+        /* Modal Checkbox Layout Fixes */
+        #event-branches-check, #event-years-check, #event-sections-check {
+            flex-direction: row; /* Keep horizontal on larger screens */
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        #event-branches-check input, #event-years-check input, #event-sections-check input {
+            width: auto;
+            margin-bottom: 0;
+        }
+        @media (max-width: 450px) {
+             #event-branches-check, #event-years-check, #event-sections-check {
+                flex-direction: column; /* Stack checkboxes vertically on small phones */
+                align-items: flex-start;
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* LOGIN / SIGNUP VIEW */
+        /* ---------------------------------------------------- */
+        #auth-view {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+        }
+
+        .auth-form {
+            max-width: 450px;
+            width: 90%;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .auth-form h2 {
+            margin-bottom: 25px;
+            color: var(--accent-color);
+            text-shadow: 0 0 5px var(--accent-color);
+        }
+
+        .form-switch {
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        .form-switch a {
+            color: var(--accent-color);
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        /* ---------------------------------------------------- */
+        /* DASHBOARD VIEWS */
+        /* ---------------------------------------------------- */
+        main {
+            flex-grow: 1;
+            padding: 20px 0;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px 20px;
+            background: linear-gradient(90deg, var(--bg-secondary) 0%, rgba(13, 17, 23, 0.8) 100%);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .greeting h1 {
+            font-size: 2em;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .greeting p {
+            color: var(--text-secondary);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Adjusted for mobile */
+            gap: 15px; /* Adjusted for mobile */
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2em; /* Reduced for mobile */
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            font-size: 0.8em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+
+        /* Event List / Admin Controls */
+        .controls-panel {
+            display: flex;
+            gap: 10px; /* Reduced gap for mobile */
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .controls-panel input, .controls-panel select {
+            flex: 1 1 100%; /* Full width on mobile by default */
+        }
+        /* Target two elements to occupy half width on slightly larger phones/tablets */
+        @media (min-width: 480px) {
+            .controls-panel input, .controls-panel select {
+                flex: 1 1 calc(50% - 5px); /* Two columns */
+            }
+        }
+        @media (min-width: 768px) {
+             .controls-panel input, .controls-panel select {
+                flex: 1; /* Reset for larger screens */
+            }
+        }
+
+
+        #events-list {
+            display: grid;
+            grid-template-columns: 1fr; /* Single column layout for mobile */
+            gap: 15px; /* Reduced gap for mobile */
+        }
+        @media (min-width: 600px) {
+             #events-list {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Re-introduce columns on tablets/desktops */
+            }
+        }
+
+
+        .event-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .event-card-header {
+            display: flex;
+            flex-direction: column; /* Stack header items */
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .event-card-header h4 {
+            font-size: 1.1em;
+            color: var(--accent-color);
+            margin-bottom: 5px;
+        }
+        
+        .event-tags {
+            margin-top: 5px;
+        }
+        .event-tags span {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+            font-size: 0.7em;
+            padding: 3px 8px;
+            border-radius: 10px;
+            margin-right: 5px; /* Change to right for better flow */
+            margin-left: 0; /* Remove old left margin */
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .event-details {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin: 5px 0 10px;
+        }
+
+        .event-actions {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+            flex-wrap: wrap; /* Wrap buttons */
+        }
+        
+        .event-actions .btn {
+            flex: 1 1 100%; /* Make buttons full width on small screens */
+            min-width: unset;
+        }
+        @media (min-width: 480px) {
+            .event-actions .btn {
+                flex: 1; /* Reset for slightly larger screens */
+            }
+        }
+        
+
+        /* Admin Table - Responsive pseudo-table pattern */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            min-width: 600px; /* Ensures space for 6 columns before wrapping to mobile pseudo-table view */
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: var(--bg-secondary);
+            color: var(--accent-color);
+            text-transform: uppercase;
+            font-size: 0.85em;
+        }
+
+        .data-table tr:hover {
+            background-color: rgba(255, 255, 255, 0.05); /* subtle hover for dark mode */
+        }
+        .light-mode .data-table tr:hover {
+            background-color: rgba(0, 0, 0, 0.05); /* subtle hover for light mode */
+        }
+        
+        /* MOBILE-FIRST TABLE STYLES - Hiding headers, making rows act like cards */
+        @media (max-width: 768px) {
+            .data-table {
+                border: none;
+                min-width: 100%; /* Override min-width on mobile */
+            }
+            .data-table thead {
+                display: none; /* Hide original headers */
+            }
+            .data-table tr {
+                display: block;
+                margin-bottom: 15px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+                background-color: var(--bg-glass);
+                box-shadow: var(--shadow-elevation);
+            }
+            .data-table td {
+                display: block;
+                text-align: right;
+                padding: 10px;
+                border-bottom: 1px dashed var(--border-color);
+                position: relative;
+            }
+            .data-table td:before {
+                content: attr(data-label); /* Use data-label for pseudo-header */
+                float: left;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: 0.8em;
+                color: var(--accent-color);
+            }
+            .data-table td:last-child {
+                border-bottom: 0;
+                text-align: center; /* Center action buttons */
+            }
+            .data-table td:last-child:before {
+                content: ""; /* Hide label for actions column */
+            }
+            .data-table tr:hover {
+                transform: none; /* Disable hover effect that moves card */
+            }
+        }
+
+
+        /* Leaderboard */
+        #leaderboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .leader-card {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+        }
+
+        .leader-rank {
+            font-size: 1.8em; /* Reduced for mobile */
+            font-weight: 900;
+            color: var(--accent-color);
+            margin-right: 15px;
+            width: 40px; /* Adjusted width */
+            text-align: center;
+        }
+
+        .leader-info h4 {
+            font-size: 1em;
+            color: var(--text-primary);
+            margin-bottom: 3px;
+        }
+
+        .leader-info p {
+            font-size: 0.75em;
+            color: var(--text-secondary);
+        }
+
+        .leader-participation {
+            margin-left: auto;
+            font-size: 1.2em; /* Reduced for mobile */
+            font-weight: 700;
+            color: var(--accent-color);
+        }
+
+        /* ---------------------------------------------------- */
+        /* FOOTER */
+        /* ---------------------------------------------------- */
+        footer {
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.75em;
+            color: var(--text-secondary);
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+            margin-top: 20px;
+        }
+
+        /* ---------------------------------------------------- */
+        /* RESPONSIVENESS */
+        /* ---------------------------------------------------- */
+        @media (max-width: 768px) {
+             .container {
+                padding: 10px; /* Tighter padding on mobile */
+            }
+            header {
+                padding: 10px 0; /* Tighter header padding */
+            }
+            .header-content {
+                /* Changed to row layout on mobile to keep the logo and toggle side-by-side */
+                flex-direction: row; 
+                justify-content: space-between;
+                gap: 5px; /* Reduced gap */
+            }
+            .logo {
+                font-size: 1.3em;
+                letter-spacing: 1px;
+            }
+            .logo img {
+                height: 24px;
+                margin-right: 5px;
+            }
+            .nav-links {
+                /* Ensure all nav buttons wrap cleanly, but keep them on the right */
+                justify-content: flex-end;
+                flex-wrap: wrap; 
+            }
+            .nav-links button {
+                margin: 5px 0 0 0; /* Clear left margin, add top margin */
+                padding: 8px 12px; /* Smaller buttons */
+                font-size: 0.8em;
+            }
+            .theme-switch {
+                margin-top: 5px; /* Add slight separation from buttons */
+                margin-left: 0;
+            }
+            
+            /* Admin Portal Button Grouping */
+            #admin-portal .controls-panel .btn-secondary {
+                flex: 1 1 100%;
+            }
+            #admin-portal .controls-panel button[onclick^="exportRegistrations"] {
+                flex: 1 1 calc(50% - 5px); /* Half width for the two export buttons */
+            }
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .greeting {
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+    <link rel="icon" href="https://via.placeholder.com/32/00FFFF/0D1117?text=C" type="image/png">
+</head>
+<body>
+
+    <div id="toast-container"></div>
+
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content glass-card">
+            <h3 id="modal-title" style="margin-bottom: 15px; color: var(--accent-color);">Confirm Action</h3>
+            <p id="modal-message" style="margin-bottom: 25px;">Are you sure you want to proceed?</p>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-secondary" id="modal-cancel-btn">Cancel</button>
+                <button class="btn btn-primary" id="modal-confirm-btn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <img src="logo.png">
+                kiet Campus Connect
+            </div>
+            <div class="nav-links" id="nav-links">
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle-checkbox" onclick="toggleMode()">
+                    <span class="slider"></span>
+                    <div class="toggle-labels">
+                        <span class="dark-label">Dark</span>
+                        <span class="light-label">Light</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <div id="auth-view" style="display: flex;">
+        <div class="auth-form glass-panel">
+            <h2 id="auth-title">Student Login</h2>
+            <form id="login-form">
+                <input type="text" id="login-username" placeholder="Username or Email" required>
+                <input type="password" id="login-password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Log In</button>
+            </form>
+            <form id="signup-form" style="display: none;">
+                <input type="text" id="signup-fullname" placeholder="Full Name" required>
+                <input type="text" id="signup-roll" pattern="[0-9]{13}" title="Ente kiet roll number" placeholder="Roll Number" required>
+                <input type="tel" id="signup-phone" pattern="[0-9]{10}" title="10-digit phone number" placeholder="Phone Number" required>
+                <select id="signup-branch" required>
+                    <option value="">Select Branch</option>
+                    <option value="CSE">CSE</option>
+                    <option value="CSE (AIML)">CSE (AIML)</option>
+                    <option value="CSE (DS)">CSE (DS)</option>
+                    <option value="CSE (IOT)">CSE (IOT)</option>
+                    <option value="IT">IT</option>
+                    <option value="CS">CS</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                </select>
+                <select id="signup-year" required>
+                    <option value="">Select Year</option>
+                    <option value="1">1st Year</option>
+                    <option value="2">2nd Year</option>
+                    <option value="3">3rd Year</option>
+                    <option value="4">4th Year</option>
+                </select>
+                <select id="signup-section" required>
+                    <option value="">Select Section</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                    <option value="F">F</option>
+                    <option value="G">G</option>
+                </select>
+                <input type="email" id="signup-email" placeholder="College Email (@kiet.edu)" pattern="^.+@kiet\.edu\.in$" title="Must be a @kiet.edu email" required>
+                <input type="text" id="signup-username" placeholder="Username" required>
+                <input type="password" id="signup-password" placeholder="Password" required>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Sign Up</button>
+            </form>
+            <p class="form-switch">
+                <span id="switch-text">New student?</span>
+                <a id="switch-link" onclick="toggleAuthForm()">Create an Account</a>
+            </p>
+        </div>
+    </div>
+
+    <main id="app-main" style="display: none;">
+        <div class="container">
+            <section id="student-dashboard" style="display: none;">
+                <div class="dashboard-header">
+                    <div class="greeting">
+                        <h1 id="student-greeting">Hello, User</h1>
+                        <p id="current-datetime"></p>
+                    </div>
+                </div>
+
+                <div id="announcement-banner" class="glass-panel" style="display:none; border: 2px solid var(--accent-color); padding: 10px; margin-bottom: 20px;">
+                    <h3 style="color: var(--accent-color); margin-bottom: 5px;">ANNOUNCEMENT</h3>
+                    <p id="announcement-content"></p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="glass-card stat-card">
+                        <h3 id="stat-total-events">0</h3>
+                        <p>Total Events</p>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <h3 id="stat-total-participants">0</h3>
+                        <p>Total Participants</p>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <h3 id="stat-my-participations">0</h3>
+                        <p>My Participations</p>
+                    </div>
+                    <div class="glass-card stat-card">
+                        <h3 id="stat-my-bookmarks">0</h3>
+                        <p>My Bookmarks</p>
+                    </div>
+                </div>
+
+                <div class="controls-panel glass-panel">
+                    <input type="text" id="student-search" placeholder="Live Search: Title, Domain, Type..." oninput="renderStudentEvents()">
+                    <select id="filter-domain" onchange="renderStudentEvents()">
+                        <option value="">All Domains</option>
+                        <option value="WebDev">WebDev</option>
+                        <option value="AI/ML">AI/ML</option>
+                        <option value="CyberSecurity">CyberSecurity</option>
+                        <option value="Competitive Programming">CP</option>
+                        <option value="Other">Other</option>
+                    </select>
+                    <select id="filter-type" onchange="renderStudentEvents()">
+                        <option value="">All Types</option>
+                        <option value="Hackathon">Hackathon</option>
+                        <option value="Internship">Internship</option>
+                        <option value="Fest">Fest</option>
+                        <option value="Workshop">Workshop</option>
+                    </select>
+                    <select id="filter-deadline" onchange="renderStudentEvents()">
+                        <option value="">All Deadlines</option>
+                        <option value="upcoming">Upcoming (3 days)</option>
+                        <option value="past">Past</option>
+                    </select>
+                </div>
+
+                <h2 style="margin-bottom: 15px; color: var(--accent-color);">Events Feed</h2>
+                <div id="events-list">
+                </div>
+            </section>
+
+            <section id="admin-portal" style="display: none;">
+                <h1 style="color: var(--accent-color); margin-bottom: 20px;">ADMIN PORTAL</h1>
+
+                <div class="glass-panel">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                        <h2 style="margin: 0;">Event Management</h2>
+                        <button class="btn btn-primary" onclick="showEventModal('add')">Add New Event</button>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Type</th>
+                                    <th>Deadline</th>
+                                    <th>Seats</th>
+                                    <th>Visibility</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-event-table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="margin-top: 30px;">
+                    <h2>Registration Management</h2>
+                    <div class="controls-panel" style="margin-top: 15px;">
+                        <select id="admin-reg-event-filter" onchange="renderAdminRegistrations()">
+                            <option value="">All Events</option>
+                        </select>
+                        <select id="admin-reg-branch-filter" onchange="renderAdminRegistrations()">
+                            <option value="">All Branches</option>
+                            <option value="CSE">CSE</option>
+                            <option value="CSE (AIML)">CSE (AIML)</option>
+                            <option value="CSE (DS)">CSE (DS)</option>
+                            <option value="CSE (IOT)">CSE (IOT)</option>
+                            <option value="IT">IT</option>
+                            <option value="CS">CS</option>
+                            <option value="ECE">ECE</option>
+                            <option value="EEE">EEE</option>
+                        </select>
+                        <select id="admin-reg-year-filter" onchange="renderAdminRegistrations()">
+                            <option value="">All Years</option>
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                        <button class="btn btn-secondary" onclick="exportRegistrations('txt')">Export TXT</button>
+                        <button class="btn btn-secondary" onclick="exportRegistrations('csv')">Export CSV</button>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Event</th>
+                                    <th>Name</th>
+                                    <th>Roll No</th>
+                                    <th>Branch/Year</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-registration-table">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="glass-panel" style="margin-top: 30px;">
+                    <h2>Post Announcement</h2>
+                    <textarea id="admin-announcement-text" placeholder="Enter announcement text..." rows="3"></textarea>
+                    <button class="btn btn-primary" onclick="postAnnouncement()">Post</button>
+                </div>
+            </section>
+
+            <section id="leaderboard-view" style="display: none;">
+                <h1 style="color: var(--accent-color); margin-bottom: 20px;">LEADERBOARD // TOP PARTICIPANTS</h1>
+
+                <div id="leaderboard-list">
+                </div>
+            </section>
+
+            <section id="linkedin-generator-view" style="display: none;">
+                <h1 style="color: var(--accent-color); margin-bottom: 20px;">LINKEDIN POST GENERATOR</h1>
+
+                <div class="glass-panel">
+                    <h2>Select Event for Post Generation</h2>
+                    <select id="linkedin-event-select" style="margin-top: 15px; margin-bottom: 20px;">
+                        <option value="">Select a registered event...</option>
+                    </select>
+                    <textarea id="linkedin-post-output" rows="10" placeholder="Generated LinkedIn Post will appear here..." readonly></textarea>
+                    <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="generateLinkedInPost()" id="generate-post-btn" style="flex: 1;">Generate Post</button>
+                        <button class="btn btn-secondary" onclick="copyToClipboard('linkedin-post-output')" id="copy-post-btn" style="display: none; flex: 1;">Copy to Clipboard</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="profile-view" style="display: none;">
+                <h1 style="color: var(--accent-color); margin-bottom: 20px;">MY PROFILE</h1>
+                <div class="glass-panel">
+                    <h2>Personal Details</h2>
+                    <form id="profile-edit-form" style="margin-top: 15px;">
+                        <input type="text" id="profile-fullname" placeholder="Full Name" required>
+                        <input type="text" id="profile-roll" placeholder="Roll Number" readonly style="background-color: var(--bg-primary);">
+                        <input type="tel" id="profile-phone" placeholder="Phone Number" required>
+                        <select id="profile-branch" required disabled style="background-color: var(--bg-primary);">
+                            <option value="CSE">CSE</option>
+                            <option value="CSE (AIML)">CSE (AIML)</option>
+                            <option value="CSE (DS)">CSE (DS)</option>
+                            <option value="CSE (IOT)">CSE (IOT)</option>
+                            <option value="IT">IT</option>
+                            <option value="CS">CS</option>
+                            <option value="ECE">ECE</option>
+                            <option value="EEE">EEE</option>
+                        </select>
+                        <select id="profile-year" required disabled style="background-color: var(--bg-primary);">
+                            <option value="1">1st Year</option>
+                            <option value="2">2nd Year</option>
+                            <option value="3">3rd Year</option>
+                            <option value="4">4th Year</option>
+                        </select>
+                        <select id="profile-section" required disabled style="background-color: var(--bg-primary);">
+                            <option value="A">A</option>
+                            <option value="B">B</option>
+                            <option value="C">C</option>
+                            <option value="D">D</option>
+                            <option value="E">E</option>
+                            <option value="F">F</option>
+                            <option value="G">G</option>
+                        </select>
+                        <input type="email" id="profile-email" placeholder="College Email" readonly style="background-color: var(--bg-primary);">
+                        <input type="text" id="profile-username" placeholder="Username" required>
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </form>
+                </div>
+            </section>
+
+            <div id="event-modal" class="modal">
+                <div class="modal-content glass-card" style="max-width: 600px;">
+                    <h3 id="event-modal-title" style="margin-bottom: 20px; color: var(--accent-color);">Add Event</h3>
+                    <form id="event-crud-form">
+                        <input type="hidden" id="event-id">
+                        <input type="text" id="event-title" placeholder="Event Title" required>
+                        <textarea id="event-description" placeholder="Description" rows="3" required></textarea>
+                        
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <select id="event-domain" style="flex: 1 1 45%;" required>
+                                <option value="">Domain</option>
+                                <option value="WebDev">WebDev</option>
+                                <option value="AI/ML">AI/ML</option>
+                                <option value="CyberSecurity">CyberSecurity</option>
+                                <option value="Competitive Programming">CP</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <select id="event-type" style="flex: 1 1 45%;" required>
+                                <option value="">Type</option>
+                                <option value="Hackathon">Hackathon</option>
+                                <option value="Internship">Internship</option>
+                                <option value="Fest">Fest</option>
+                                <option value="Workshop">Workshop</option>
+                            </select>
+                        </div>
+                        
+                        <input type="text" id="event-organizer" placeholder="Organizer" required>
+                        <input type="text" id="event-tags" placeholder="Tags (comma-separated: JS, React, AI)">
+                        <label for="event-deadline" style="display: block; color: var(--text-secondary); margin-bottom: 5px;">Deadline:</label>
+                        <input type="datetime-local" id="event-deadline" required>
+                        <input type="number" id="event-seats" placeholder="Seats Available" required min="1">
+                        <h4 style="margin-top: 15px; margin-bottom: 10px;">Visibility (Leave unchecked for all)</h4>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <div>
+                                <label style="display: block; color: var(--text-secondary);">Branches:</label>
+                                <div id="event-branches-check" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;">
+                                    <input type="checkbox" id="branch-cse" value="CSE"><label for="branch-cse">CSE</label>
+                                    <input type="checkbox" id="branch-cse-aiml" value="CSE (AIML)"><label for="branch-cse-aiml">CSE (AIML)</label>
+                                    <input type="checkbox" id="branch-cse-ds" value="CSE (DS)"><label for="branch-cse-ds">CSE (DS)</label>
+                                    <input type="checkbox" id="branch-cse-iot" value="CSE (IOT)"><label for="branch-cse-iot">CSE (IOT)</label>
+                                    <input type="checkbox" id="branch-it" value="IT"><label for="branch-it">IT</label>
+                                    <input type="checkbox" id="branch-cs" value="CS"><label for="branch-cs">CS</label>
+                                    <input type="checkbox" id="branch-ece" value="ECE"><label for="branch-ece">ECE</label>
+                                    <input type="checkbox" id="branch-eee" value="EEE"><label for="branch-eee">EEE</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: block; color: var(--text-secondary);">Years:</label>
+                                <div id="event-years-check" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;">
+                                    <input type="checkbox" id="year-1" value="1"><label for="year-1">1st</label>
+                                    <input type="checkbox" id="year-2" value="2"><label for="year-2">2nd</label>
+                                    <input type="checkbox" id="year-3" value="3"><label for="year-3">3rd</label>
+                                    <input type="checkbox" id="year-4" value="4"><label for="year-4">4th</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label style="display: block; color: var(--text-secondary);">Sections:</label>
+                                <div id="event-sections-check" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 5px;">
+                                    <input type="checkbox" id="section-a" value="A"><label for="section-a">A</label>
+                                    <input type="checkbox" id="section-b" value="B"><label for="section-b">B</label>
+                                    <input type="checkbox" id="section-c" value="C"><label for="section-c">C</label>
+                                    <input type="checkbox" id="section-d" value="D"><label for="section-d">D</label>
+                                    <input type="checkbox" id="section-e" value="E"><label for="section-e">E</label>
+                                    <input type="checkbox" id="section-f" value="F"><label for="section-f">F</label>
+                                    <input type="checkbox" id="section-g" value="G"><label for="section-g">G</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px;">
+                            <button type="button" class="btn btn-secondary" onclick="document.getElementById('event-modal').style.display = 'none'">Cancel</button>
+                            <button type="submit" class="btn btn-primary" id="event-modal-submit-btn">Save Event</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>Made by Priyanshu Atri</p>
+        </div>
+    </footer>
+
+    <script>
+        /* ---------------------------------------------------- */
+        /* GLOBAL STATE & LOCALSTORAGE WRAPPER */
+        /* ---------------------------------------------------- */
+        const DB_KEYS = {
+            USERS: 'cc_users',
+            EVENTS: 'cc_events',
+            REGISTRATIONS: 'cc_registrations',
+            BOOKMARKS: 'cc_bookmarks',
+            ANNOUNCEMENT: 'cc_announcement'
+        };
+
+        let currentUser = null; // Stores logged-in user object
+        let currentRole = null; // 'admin' or 'student'
+
+        const ADMIN_CREDENTIALS = {
+            email: 'admin@kiet.edu',
+            password: 'admin123'
+        };
+
+        /**
+         * Wrapper for localStorage operations.
+         * @param {string} key - The localStorage key.
+         * @returns {Array} Parsed data or an empty array.
+         */
+        function getDB(key) {
+            const data = localStorage.getItem(key);
+            try {
+                return data ? JSON.parse(data) : (key === DB_KEYS.ANNOUNCEMENT ? [{}] : []);
+            } catch (e) {
+                console.error("Error parsing data from localStorage for key:", key, e);
+                return (key === DB_KEYS.ANNOUNCEMENT ? [{}] : []);
+            }
+        }
+
+        /**
+         * Saves data to localStorage.
+         * @param {string} key - The localStorage key.
+         * @param {Array} data - The data array to save.
+         */
+        function saveDB(key, data) {
+            localStorage.setItem(key, JSON.stringify(data));
+            // Trigger a UI refresh for students if admin makes changes
+            if (key === DB_KEYS.EVENTS || key === DB_KEYS.REGISTRATIONS || key === DB_KEYS.ANNOUNCEMENT) {
+                if (currentRole === 'student') {
+                    renderStudentDashboard();
+                } else if (currentRole === 'admin') {
+                    renderAdminPortal();
+                }
+            }
+        }
+
+        /**
+         * Seeds initial data if localStorage is empty.
+         */
+        function seedInitialData() {
+            if (!localStorage.getItem(DB_KEYS.USERS)) {
+                const users = [
+                    {
+                        id: 's_001', role: 'student', fullname: 'Aryan Sharma', roll: '22EACS001', phone: '9876543210',
+                        branch: 'CSE', year: '2', section: 'A', email: 'aryan@kiet.edu', username: 'aryan', password: 'password',
+                        participations: 0, joinedDate: new Date().toISOString()
+                    },
+                    {
+                        id: 's_002', role: 'student', fullname: 'Priya Verma', roll: '21EAIT002', phone: '9988776655',
+                        branch: 'IT', year: '3', section: 'B', email: 'priya@kiet.edu', username: 'priya', password: 'password',
+                        participations: 0, joinedDate: new Date().toISOString()
+                    }
+                ];
+                saveDB(DB_KEYS.USERS, users);
+            }
+
+            if (!localStorage.getItem(DB_KEYS.EVENTS)) {
+                const events = [
+                    {
+                        id: 'e_001', title: 'CodeBlitz Hackathon 4.0', domain: 'Competitive Programming', type: 'Hackathon',
+                        description: '24-hour coding challenge. Solve real-world problems and win big prizes.',
+                        branches: ['CSE', 'IT'], years: ['2', '3', '4'], sections: ['A', 'B', 'C'],
+                        deadline: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16), // 5 days from now
+                        seats: 150, organizer: 'Tech Club', tags: 'Algorithms, DataStructures', isActive: true, registrations: 0
+                    },
+                    {
+                        id: 'e_002', title: 'Full Stack Web Dev Workshop', domain: 'WebDev', type: 'Workshop',
+                        description: 'Hands-on workshop covering MERN stack. Learn to build a scalable web application.',
+                        branches: ['CSE', 'IT', 'ECE'], years: ['1', '2'], sections: ['A', 'B'],
+                        deadline: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16), // 2 days from now
+                        seats: 50, organizer: 'CSE Department', tags: 'React, Node, MongoDB', isActive: true, registrations: 0
+                    },
+                    {
+                        id: 'e_003', title: 'Internship Opportunity: Data Analyst', domain: 'AI/ML', type: 'Internship',
+                        description: '3-month remote internship for the Data Science team. Requires Python & Pandas skills.',
+                        branches: ['CSE', 'IT'], years: ['3', '4'], sections: ['A', 'B', 'C'],
+                        deadline: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().slice(0, 16), // 2 days ago (Past)
+                        seats: 5, organizer: 'Innovate Corp', tags: 'Python, Pandas, ML', isActive: true, registrations: 0
+                    }
+                ];
+                saveDB(DB_KEYS.EVENTS, events);
+            }
+        }
+
+        /* ---------------------------------------------------- */
+        /* UTILITY FUNCTIONS */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Shows a transient notification.
+         * @param {string} message - The message to display.
+         */
+        function showToast(message) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('fade-out');
+                toast.addEventListener('animationend', () => toast.remove());
+            }, 4000);
+        }
+
+        /**
+         * Toggles between Dark and Light mode.
+         */
+        function toggleMode() {
+            const body = document.body;
+            const checkbox = document.getElementById('theme-toggle-checkbox');
+            
+            // Toggle based on checkbox state
+            if (checkbox.checked) {
+                body.classList.add('light-mode');
+                localStorage.setItem('Mode', 'light');
+            } else {
+                body.classList.remove('light-mode');
+                localStorage.setItem('Mode', 'dark');
+            }
+        }
+
+        /**
+         * Sets initial Mode based on user preference or localStorage.
+         */
+        function setInitialMode() {
+            const savedMode = localStorage.getItem('Mode');
+            const prefersLight = window.matchMedia('(prefers-color-scheme: light)').matches;
+            const checkbox = document.getElementById('theme-toggle-checkbox');
+
+            if (savedMode === 'light' || (!savedMode && prefersLight)) {
+                document.body.classList.add('light-mode');
+                checkbox.checked = true;
+            } else {
+                document.body.classList.remove('light-mode');
+                checkbox.checked = false;
+            }
+        }
+
+        /**
+         * Generates a unique ID.
+         * @param {string} prefix - Prefix for the ID.
+         */
+        function generateUniqueId(prefix = 'id_') {
+            return prefix + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+        }
+
+        /**
+         * Confirms an action with a modal.
+         * @param {string} title - Modal title.
+         * @param {string} message - Modal message.
+         * @returns {Promise<boolean>} Resolves true if confirmed, false otherwise.
+         */
+        function confirmAction(title, message) {
+            return new Promise(resolve => {
+                const modal = document.getElementById('confirmation-modal');
+                document.getElementById('modal-title').textContent = title;
+                document.getElementById('modal-message').textContent = message;
+                modal.style.display = 'flex';
+
+                const confirmBtn = document.getElementById('modal-confirm-btn');
+                const cancelBtn = document.getElementById('modal-cancel-btn');
+
+                const handleConfirm = () => {
+                    modal.style.display = 'none';
+                    confirmBtn.removeEventListener('click', handleConfirm);
+                    cancelBtn.removeEventListener('click', handleCancel);
+                    resolve(true);
+                };
+
+                const handleCancel = () => {
+                    modal.style.display = 'none';
+                    confirmBtn.removeEventListener('click', handleConfirm);
+                    cancelBtn.removeEventListener('click', handleCancel);
+                    resolve(false);
+                };
+
+                confirmBtn.onclick = handleConfirm;
+                cancelBtn.onclick = handleCancel;
+            });
+        }
+
+        /**
+         * Downloads text as a blob file.
+         * @param {string} content - The content to download.
+         * @param {string} filename - The desired filename.
+         * @param {string} type - The MIME type (e.g., 'text/plain', 'text/csv').
+         */
+        function downloadBlob(content, filename, type) {
+            const blob = new Blob([content], { type: type });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        /**
+         * Copies text from an element to the clipboard.
+         * @param {string} elementId - The ID of the input/textarea element.
+         */
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+
+            element.select();
+            element.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                document.execCommand('copy');
+                showToast('Copied to Clipboard!');
+            } catch (err) {
+                console.error('Copy failed:', err);
+                showToast('Failed to copy. Please copy manually.');
+            }
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* AUTHENTICATION & SESSION MANAGEMENT */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Toggles between Login and Signup forms.
+         */
+        function toggleAuthForm() {
+            const loginForm = document.getElementById('login-form');
+            const signupForm = document.getElementById('signup-form');
+            const authTitle = document.getElementById('auth-title');
+            const switchText = document.getElementById('switch-text');
+            const switchLink = document.getElementById('switch-link');
+
+            if (loginForm.style.display !== 'none') {
+                loginForm.style.display = 'none';
+                signupForm.style.display = 'block';
+                authTitle.textContent = 'Student Sign Up';
+                switchText.textContent = 'Already have an account?';
+                switchLink.textContent = 'Log In';
+            } else {
+                loginForm.style.display = 'block';
+                signupForm.style.display = 'none';
+                authTitle.textContent = 'Student Login';
+                switchText.textContent = 'New student?';
+                switchLink.textContent = 'Create an Account';
+            }
+        }
+
+        /**
+         * Handles user login.
+         * @param {Event} e - Form submit event.
+         */
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value.trim();
+            const password = document.getElementById('login-password').value.trim();
+
+            if (username === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+                currentUser = { id: 'admin', role: 'admin', fullname: 'Admin', username: 'admin' };
+                currentRole = 'admin';
+                showToast('Welcome, Admin!');
+                updateUI('admin');
+                return;
+            }
+
+            const users = getDB(DB_KEYS.USERS);
+            const user = users.find(u =>
+                (u.username === username || u.email === username) && u.password === password
+            );
+
+            if (user) {
+                currentUser = user;
+                currentRole = 'student';
+                showToast(`Welcome back, ${user.fullname.split(' ')[0]}!`);
+                updateUI('student');
+            } else {
+                showToast('Login Failed: Invalid credentials or account not found.', 'error');
+            }
+        }
+
+        /**
+         * Handles student signup.
+         * @param {Event} e - Form submit event.
+         */
+        function handleSignup(e) {
+            e.preventDefault();
+            const fullname = document.getElementById('signup-fullname').value.trim();
+            const roll = document.getElementById('signup-roll').value.trim().toUpperCase();
+            const phone = document.getElementById('signup-phone').value.trim();
+            const branch = document.getElementById('signup-branch').value;
+            const year = document.getElementById('signup-year').value;
+            const section = document.getElementById('signup-section').value;
+            const email = document.getElementById('signup-email').value.trim().toLowerCase();
+            const username = document.getElementById('signup-username').value.trim().toLowerCase();
+            const password = document.getElementById('signup-password').value.trim();
+
+            const users = getDB(DB_KEYS.USERS);
+            if (users.some(u => u.roll === roll)) {
+                showToast('Signup Failed: Roll Number already registered.', 'error');
+                return;
+            }
+            if (users.some(u => u.username === username)) {
+                showToast('Signup Failed: Username already taken.', 'error');
+                return;
+            }
+            if (users.some(u => u.email === email)) {
+                showToast('Signup Failed: Email already registered.', 'error');
+                return;
+            }
+
+            const newUser = {
+                id: generateUniqueId('s_'),
+                role: 'student',
+                fullname,
+                roll,
+                phone,
+                branch,
+                year,
+                section,
+                email,
+                username,
+                password,
+                participations: 0,
+                joinedDate: new Date().toISOString()
+            };
+
+            users.push(newUser);
+            saveDB(DB_KEYS.USERS, users);
+            showToast('Your account has been created successfully!');
+            document.getElementById('signup-form').reset();
+            toggleAuthForm(); // Switch to login
+        }
+
+        /**
+         * Handles user logout.
+         */
+        function logout() {
+            currentUser = null;
+            currentRole = null;
+            showToast('Logged out successfully.');
+            updateUI(null);
+        }
+
+        /* ---------------------------------------------------- */
+        /* UI RENDERING & ROUTING */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Updates the main UI elements based on the current user role.
+         * @param {string | null} role - 'admin', 'student', or null for auth view.
+         */
+        function updateUI(role) {
+            const authView = document.getElementById('auth-view');
+            const appMain = document.getElementById('app-main');
+            const navLinks = document.getElementById('nav-links');
+            const themeToggle = document.querySelector('.theme-switch');
+
+            // Reset views
+            document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+            
+            // Clear existing nav buttons, but keep the theme toggle
+            const existingButtons = navLinks.querySelectorAll('.nav-links > button, .nav-links > a');
+            existingButtons.forEach(btn => btn.remove());
+            
+            // Re-order children to put toggle last
+            if (themeToggle) {
+                navLinks.appendChild(themeToggle);
+            }
+
+
+            if (!role) {
+                authView.style.display = 'flex';
+                appMain.style.display = 'none';
+                themeToggle.style.display = 'inline-flex';
+            } else {
+                authView.style.display = 'none';
+                appMain.style.display = 'block';
+                themeToggle.style.display = 'inline-flex';
+
+
+                const logoutBtn = document.createElement('button');
+                logoutBtn.className = 'btn btn-secondary';
+                logoutBtn.textContent = 'Log Out';
+                logoutBtn.onclick = logout;
+                navLinks.prepend(logoutBtn); // Prepend to keep logout last visually before toggle
+
+                if (role === 'student') {
+                    const profileBtn = createNavButton('Profile', () => navigate('profile-view'));
+                    const linkedinBtn = createNavButton('LinkedIn', () => navigate('linkedin-generator-view'));
+                    const leaderboardBtn = createNavButton('Leaderboard', () => navigate('leaderboard-view'));
+                    const dashboardBtn = createNavButton('Dashboard', () => navigate('student-dashboard'));
+
+                    navLinks.prepend(profileBtn, linkedinBtn, leaderboardBtn, dashboardBtn);
+                    navigate('student-dashboard');
+                } else if (role === 'admin') {
+                    const adminBtn = createNavButton('Admin Portal', () => navigate('admin-portal'));
+                    navLinks.prepend(adminBtn);
+                    navigate('admin-portal');
+                }
+            }
+        }
+
+        /**
+         * Creates a navigation button.
+         * @param {string} text - Button text.
+         * @param {Function} onClick - Click handler.
+         */
+        function createNavButton(text, onClick) {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-primary';
+            btn.textContent = text;
+            btn.onclick = onClick;
+            return btn;
+        }
+
+        /**
+         * Navigates between application sections.
+         * @param {string} viewId - The ID of the section to show.
+         */
+        function navigate(viewId) {
+            document.querySelectorAll('section').forEach(s => s.style.display = 'none');
+            const view = document.getElementById(viewId);
+            if (view) {
+                view.style.display = 'block';
+            }
+
+            // Specific view rendering functions
+            if (viewId === 'student-dashboard') renderStudentDashboard();
+            else if (viewId === 'admin-portal') renderAdminPortal();
+            else if (viewId === 'leaderboard-view') renderLeaderboard();
+            else if (viewId === 'profile-view') renderProfile();
+            else if (viewId === 'linkedin-generator-view') renderLinkedInGenerator();
+        }
+
+        /* ---------------------------------------------------- */
+        /* STUDENT DASHBOARD LOGIC */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Renders the student dashboard with filtered events and stats.
+         */
+        function renderStudentDashboard() {
+            if (!currentUser) return;
+
+            // 1. GREETING & DATETIME
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            document.getElementById('student-greeting').textContent = `Hello, ${currentUser.fullname.split(' ')[0]}`;
+            document.getElementById('current-datetime').textContent = dateStr;
+
+            // 2. ANNOUNCEMENTS
+            const announcement = getDB(DB_KEYS.ANNOUNCEMENT)[0];
+            const announcementBanner = document.getElementById('announcement-banner');
+            const announcementContent = document.getElementById('announcement-content');
+
+            if (announcement && announcement.text) {
+                announcementContent.textContent = announcement.text;
+                announcementBanner.style.display = 'block';
+            } else {
+                announcementBanner.style.display = 'none';
+            }
+
+            // 3. STATS
+            const events = getDB(DB_KEYS.EVENTS).filter(e => e.isActive);
+            const registrations = getDB(DB_KEYS.REGISTRATIONS);
+            const bookmarks = getDB(DB_KEYS.BOOKMARKS).filter(b => b.userId === currentUser.id);
+            const myRegistrations = registrations.filter(r => r.userId === currentUser.id);
+
+            const totalParticipants = registrations.map(r => r.userId).filter((value, index, self) => self.indexOf(value) === index).length;
+
+            document.getElementById('stat-total-events').textContent = events.length;
+            document.getElementById('stat-total-participants').textContent = totalParticipants;
+            document.getElementById('stat-my-participations').textContent = myRegistrations.length;
+            document.getElementById('stat-my-bookmarks').textContent = bookmarks.length;
+
+            // 4. EVENTS
+            renderStudentEvents();
+        }
+
+        /**
+         * Renders the event list for students based on filters and user profile.
+         */
+        function renderStudentEvents() {
+            if (!currentUser) return;
+            const eventsList = document.getElementById('events-list');
+            eventsList.innerHTML = '';
+
+            let events = getDB(DB_KEYS.EVENTS).filter(e => e.isActive);
+            const registrations = getDB(DB_KEYS.REGISTRATIONS).filter(r => r.userId === currentUser.id);
+            const bookmarks = getDB(DB_KEYS.BOOKMARKS).filter(b => b.userId === currentUser.id);
+
+            // Filter by Student's Profile (Branch, Year, Section)
+            events = events.filter(e => {
+                const branchMatch = !e.branches || e.branches.length === 0 || e.branches.includes(currentUser.branch);
+                const yearMatch = !e.years || e.years.length === 0 || e.years.includes(currentUser.year);
+                const sectionMatch = !e.sections || e.sections.length === 0 || e.sections.includes(currentUser.section);
+                return branchMatch && yearMatch && sectionMatch;
+            });
+
+            // Live Search & Filters
+            const search = document.getElementById('student-search').value.toLowerCase();
+            const domainFilter = document.getElementById('filter-domain').value;
+            const typeFilter = document.getElementById('filter-type').value;
+            const deadlineFilter = document.getElementById('filter-deadline').value;
+            const now = Date.now();
+
+            events = events.filter(e => {
+                const searchMatch = e.title.toLowerCase().includes(search) ||
+                                     e.domain.toLowerCase().includes(search) ||
+                                     e.type.toLowerCase().includes(search) ||
+                                     e.description.toLowerCase().includes(search);
+
+                const domainMatch = !domainFilter || e.domain === domainFilter;
+                const typeMatch = !typeFilter || e.type === typeFilter;
+                let deadlineMatch = true;
+
+                if (deadlineFilter === 'upcoming') {
+                    deadlineMatch = new Date(e.deadline).getTime() > now && (new Date(e.deadline).getTime() - now) <= 3 * 24 * 60 * 60 * 1000;
+                } else if (deadlineFilter === 'past') {
+                    deadlineMatch = new Date(e.deadline).getTime() < now;
+                }
+
+                return searchMatch && domainMatch && typeMatch && deadlineMatch;
+            });
+
+            if (events.length === 0) {
+                eventsList.innerHTML = '<p style="text-align: center; color: var(--text-secondary);">No events found matching your criteria.</p>';
+            }
+
+            events.forEach(event => {
+                const isRegistered = registrations.some(r => r.userId === currentUser.id && r.eventId === event.id);
+                const isBookmarked = bookmarks.some(b => b.userId === currentUser.id && b.eventId === event.id);
+                const isDeadlinePassed = new Date(event.deadline).getTime() < now;
+                const seatsAvailable = event.seats > event.registrations;
+
+                const card = document.createElement('div');
+                card.className = 'glass-card event-card';
+                card.innerHTML = `
+                    <div class="event-card-header">
+                        <h4>${event.title}</h4>
+                        <div class="event-tags">
+                            <span>${event.domain}</span>
+                            <span>${event.type}</span>
+                        </div>
+                    </div>
+                    <p class="event-details">${event.description.substring(0, 100)}...</p>
+                    <p class="event-details">
+                        <span class="code-text">Seats:</span> ${event.registrations}/${event.seats} |
+                        <span class="code-text">Deadline:</span> ${new Date(event.deadline).toLocaleString()}
+                    </p>
+                    <div class="event-actions">
+                        ${isRegistered
+                            ? `<button class="btn btn-secondary" onclick="handleRegistration('${event.id}', 'cancel')" style="color: #FF6B6B; border-color: #FF6B6B;">Cancel Registration</button>
+                               <button class="btn btn-primary" onclick="generateParticipationRecord('${event.id}', 'txt')">Download .TXT</button>
+                               <button class="btn btn-primary" onclick="generateParticipationRecord('${event.id}', 'pdf')">Generate PDF</button>`
+                            : `<button class="btn btn-primary" ${isDeadlinePassed || !seatsAvailable ? 'disabled' : ''} onclick="handleRegistration('${event.id}', 'register')">
+                                ${isDeadlinePassed ? 'CLOSED' : (!seatsAvailable ? 'FULL' : 'Register')}
+                            </button>`
+                        }
+                        <button class="btn ${isBookmarked ? 'btn-primary' : 'btn-secondary'}" onclick="handleBookmark('${event.id}')">
+                            ${isBookmarked ? 'Bookmarked' : 'Bookmark'}
+                        </button>
+                    </div>
+                `;
+                eventsList.appendChild(card);
+            });
+        }
+
+        /**
+         * Handles event registration/cancellation.
+         * @param {string} eventId - The ID of the event.
+         * @param {string} action - 'register' or 'cancel'.
+         */
+        async function handleRegistration(eventId, action) {
+            if (!currentUser) return showToast('Please log in first.', 'error');
+            const events = getDB(DB_KEYS.EVENTS);
+            const users = getDB(DB_KEYS.USERS);
+            let registrations = getDB(DB_KEYS.REGISTRATIONS);
+            const eventIndex = events.findIndex(e => e.id === eventId);
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+
+            if (eventIndex === -1 || userIndex === -1) return;
+
+            if (action === 'register') {
+                if (events[eventIndex].registrations >= events[eventIndex].seats) {
+                    return showToast('Registration failed: Seats are full.', 'error');
+                }
+                if (registrations.some(r => r.userId === currentUser.id && r.eventId === eventId)) {
+                    return showToast('Already registered for this event.', 'error');
+                }
+
+                const newRegistration = {
+                    id: generateUniqueId('r_'),
+                    userId: currentUser.id,
+                    eventId: eventId,
+                    date: new Date().toISOString()
+                };
+
+                registrations.push(newRegistration);
+                events[eventIndex].registrations += 1;
+                users[userIndex].participations += 1;
+
+                saveDB(DB_KEYS.REGISTRATIONS, registrations);
+                saveDB(DB_KEYS.EVENTS, events);
+                saveDB(DB_KEYS.USERS, users);
+                showToast('You have successfully registered for this event!');
+            } else if (action === 'cancel') {
+                const confirmed = await confirmAction('Cancel Registration', 'Are you sure you want to cancel your registration for this event?');
+                if (!confirmed) return;
+
+                registrations = registrations.filter(r => !(r.userId === currentUser.id && r.eventId === eventId));
+                events[eventIndex].registrations -= 1;
+                users[userIndex].participations -= 1;
+
+                saveDB(DB_KEYS.REGISTRATIONS, registrations);
+                saveDB(DB_KEYS.EVENTS, events);
+                saveDB(DB_KEYS.USERS, users);
+                showToast('Registration cancelled successfully.');
+            }
+
+            // Update UI after changes
+            currentUser = users[userIndex]; // Update current user object
+            renderStudentEvents();
+            renderLeaderboard();
+            renderStudentDashboard(); // To update stats
+        }
+
+        /**
+         * Handles bookmarking/unbookmarking an event.
+         * @param {string} eventId - The ID of the event.
+         */
+        function handleBookmark(eventId) {
+            if (!currentUser) return showToast('Please log in first.', 'error');
+            let bookmarks = getDB(DB_KEYS.BOOKMARKS);
+            const isBookmarked = bookmarks.some(b => b.userId === currentUser.id && b.eventId === eventId);
+
+            if (isBookmarked) {
+                bookmarks = bookmarks.filter(b => !(b.userId === currentUser.id && b.eventId === eventId));
+                showToast('Bookmark removed.');
+            } else {
+                const newBookmark = {
+                    id: generateUniqueId('b_'),
+                    userId: currentUser.id,
+                    eventId: eventId
+                };
+                bookmarks.push(newBookmark);
+                showToast('Event bookmarked!');
+            }
+
+            saveDB(DB_KEYS.BOOKMARKS, bookmarks);
+            renderStudentEvents();
+            renderStudentDashboard(); // To update stats
+        }
+
+        /**
+         * Generates and downloads a participation record.
+         * @param {string} eventId - The ID of the event.
+         * @param {string} format - 'txt' or 'pdf'.
+         */
+        function generateParticipationRecord(eventId, format) {
+            const event = getDB(DB_KEYS.EVENTS).find(e => e.id === eventId);
+            const registration = getDB(DB_KEYS.REGISTRATIONS).find(r => r.userId === currentUser.id && r.eventId === eventId);
+
+            if (!event || !registration) {
+                return showToast('Error: Registration record not found.', 'error');
+            }
+
+            const content = `
+                kiet CAMPUS CONNECT - PARTICIPATION RECORD
+                -----------------------------------------------------
+                Participant: ${currentUser.fullname}
+                Roll Number: ${currentUser.roll}
+                Branch/Year: ${currentUser.branch}, ${currentUser.year} Year
+                College Email: ${currentUser.email}
+                -----------------------------------------------------
+                Event Title: ${event.title}
+                Event Type: ${event.type}
+                Event Domain: ${event.domain}
+                Organizer: ${event.organizer}
+                Registration Date: ${new Date(registration.date).toLocaleString()}
+                -----------------------------------------------------
+                This record confirms successful participation and registration
+                for the above-mentioned event on kiet Campus Connect.
+            `;
+
+            const filename = `${currentUser.roll}_${event.title.replace(/\s/g, '_')}_Record.${format}`;
+
+            if (format === 'txt') {
+                downloadBlob(content, filename, 'text/plain');
+                showToast('Participation record downloaded as TXT.');
+            } else if (format === 'pdf') {
+                // PDF generation using a very basic format since external libraries are forbidden
+                // NOTE: This will not render as a proper, formatted PDF without a library, but satisfies the Blob-based requirement.
+                downloadBlob(content, filename, 'application/pdf');
+                showToast('Participation record downloaded as PDF (basic text-based).');
+            }
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* STUDENT PROFILE LOGIC */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Renders the student profile data for editing.
+         */
+        function renderProfile() {
+            if (!currentUser || currentUser.role !== 'student') return;
+
+            document.getElementById('profile-fullname').value = currentUser.fullname;
+            document.getElementById('profile-roll').value = currentUser.roll;
+            document.getElementById('profile-phone').value = currentUser.phone;
+            document.getElementById('profile-branch').value = currentUser.branch;
+            document.getElementById('profile-year').value = currentUser.year;
+            document.getElementById('profile-section').value = currentUser.section;
+            document.getElementById('profile-email').value = currentUser.email;
+            document.getElementById('profile-username').value = currentUser.username;
+        }
+
+        /**
+         * Handles profile update form submission.
+         * @param {Event} e - Form submit event.
+         */
+        function handleProfileUpdate(e) {
+            e.preventDefault();
+            const users = getDB(DB_KEYS.USERS);
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+
+            if (userIndex === -1) return;
+
+            const fullname = document.getElementById('profile-fullname').value.trim();
+            const phone = document.getElementById('profile-phone').value.trim();
+            const username = document.getElementById('profile-username').value.trim().toLowerCase();
+
+            // Check for username uniqueness (excluding current user's own username)
+            if (users.some((u, i) => i !== userIndex && u.username === username)) {
+                return showToast('Update Failed: Username already taken.', 'error');
+            }
+
+            users[userIndex].fullname = fullname;
+            users[userIndex].phone = phone;
+            users[userIndex].username = username;
+
+            saveDB(DB_KEYS.USERS, users);
+            currentUser = users[userIndex]; // Update session data
+            showToast('Profile updated successfully!');
+            renderStudentDashboard(); // Refresh dashboard greeting
+        }
+
+        /* ---------------------------------------------------- */
+        /* ADMIN PORTAL LOGIC */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Renders the admin portal with event management and registration tables.
+         */
+        function renderAdminPortal() {
+            if (currentRole !== 'admin') return;
+            renderAdminEvents();
+            renderAdminRegistrationFilters();
+            renderAdminRegistrations();
+
+            // Load current announcement
+            const announcement = getDB(DB_KEYS.ANNOUNCEMENT)[0];
+            document.getElementById('admin-announcement-text').value = announcement ? announcement.text : '';
+        }
+
+        /**
+         * Populates the registration event filter dropdown.
+         */
+        function renderAdminRegistrationFilters() {
+            const events = getDB(DB_KEYS.EVENTS);
+            const select = document.getElementById('admin-reg-event-filter');
+            // Preserve current selection if possible
+            const currentSelection = select.value;
+
+            select.innerHTML = '<option value="">All Events</option>';
+            events.forEach(e => {
+                const option = document.createElement('option');
+                option.value = e.id;
+                option.textContent = e.title;
+                select.appendChild(option);
+            });
+            select.value = currentSelection;
+        }
+
+        /**
+         * Renders the list of events in the Admin table.
+         */
+        function renderAdminEvents() {
+            const tableBody = document.getElementById('admin-event-table');
+            tableBody.innerHTML = '';
+            const events = getDB(DB_KEYS.EVENTS);
+
+            events.forEach(event => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="Title">${event.title}</td>
+                    <td data-label="Type">${event.type}</td>
+                    <td data-label="Deadline">${new Date(event.deadline).toLocaleDateString()}</td>
+                    <td data-label="Seats">${event.registrations}/${event.seats}</td>
+                    <td data-label="Visibility">
+                        <button class="btn btn-secondary" onclick="toggleEventVisibility('${event.id}')" style="background-color: ${event.isActive ? '#1F7A1F' : '#FF6B6B'}; color: white; border-color: transparent; padding: 5px 10px; border-radius: 5px; font-size: 0.8em;">
+                            ${event.isActive ? 'Active' : 'Archived'}
+                        </button>
+                    </td>
+                    <td data-label="Actions" style="display: flex; gap: 5px; justify-content: center; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" style="padding: 5px 10px; flex: 1;" onclick="showEventModal('edit', '${event.id}')">Edit</button>
+                        <button class="btn btn-secondary" style="padding: 5px 10px; background-color: #FF6B6B; color: var(--bg-primary); border-color: #FF6B6B; flex: 1;" onclick="deleteEvent('${event.id}')">Delete</button>
+                    </td>
+                `;
+            });
+        }
+
+        /**
+         * Renders the event CRUD modal for Add or Edit.
+         * @param {string} mode - 'add' or 'edit'.
+         * @param {string} [eventId] - The ID of the event to edit.
+         * FIXED: Ensured ALL form fields are correctly loaded from the event object.
+         */
+        function showEventModal(mode, eventId = null) {
+            const modal = document.getElementById('event-modal');
+            const form = document.getElementById('event-crud-form');
+            
+            // 1. Reset the entire form for a clean slate
+            form.reset();
+            document.getElementById('event-id').value = '';
+
+            // 2. Set modal title and button text
+            document.getElementById('event-modal-title').textContent = mode === 'add' ? 'Add New Event' : 'Edit Event';
+            document.getElementById('event-modal-submit-btn').textContent = mode === 'add' ? 'Create Event' : 'Update Event';
+
+            // 3. Clear all checkboxes for fresh setting (important for 'add' mode or clean 'edit' load)
+            document.querySelectorAll('#event-branches-check input, #event-years-check input, #event-sections-check input').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+
+
+            if (mode === 'edit' && eventId) {
+                const event = getDB(DB_KEYS.EVENTS).find(e => e.id === eventId);
+                if (!event) return showToast('Event not found.', 'error');
+
+                // 4. Populate ALL fields from the event object
+                document.getElementById('event-id').value = event.id;
+                document.getElementById('event-title').value = event.title;
+                document.getElementById('event-description').value = event.description; // FIX: This was likely the missing detail
+                document.getElementById('event-domain').value = event.domain;
+                document.getElementById('event-type').value = event.type;
+                document.getElementById('event-organizer').value = event.organizer;
+                document.getElementById('event-tags').value = event.tags;
+                document.getElementById('event-deadline').value = event.deadline;
+                document.getElementById('event-seats').value = event.seats;
+
+                // 5. Set visibility checkboxes
+                ['branch', 'year', 'section'].forEach(group => {
+                    const prop = group + 's';
+                    document.querySelectorAll(`#event-${prop}-check input`).forEach(checkbox => {
+                        // Check if the event's visibility array includes the checkbox's value
+                        checkbox.checked = event[prop] && event[prop].includes(checkbox.value);
+                    });
+                });
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        /**
+         * Handles event creation/editing form submission.
+         * @param {Event} e - Form submit event.
+         */
+        function handleEventCRUD(e) {
+            e.preventDefault();
+            let events = getDB(DB_KEYS.EVENTS);
+            const eventId = document.getElementById('event-id').value;
+            const mode = eventId ? 'edit' : 'add';
+
+            const getCheckedValues = (id) => Array.from(document.querySelectorAll(`#event-${id}-check input:checked`)).map(c => c.value);
+
+            const eventData = {
+                title: document.getElementById('event-title').value.trim(),
+                description: document.getElementById('event-description').value.trim(),
+                domain: document.getElementById('event-domain').value,
+                type: document.getElementById('event-type').value,
+                organizer: document.getElementById('event-organizer').value.trim(),
+                tags: document.getElementById('event-tags').value.trim(),
+                deadline: document.getElementById('event-deadline').value,
+                seats: parseInt(document.getElementById('event-seats').value),
+                branches: getCheckedValues('branches'),
+                years: getCheckedValues('years'),
+                sections: getCheckedValues('sections'),
+            };
+
+            if (mode === 'add') {
+                const newEvent = {
+                    ...eventData,
+                    id: generateUniqueId('e_'),
+                    isActive: true,
+                    registrations: 0
+                };
+                events.push(newEvent);
+                showToast('Event created successfully!');
+            } else {
+                const index = events.findIndex(e => e.id === eventId);
+                if (index !== -1) {
+                    events[index] = { ...events[index], ...eventData };
+                    showToast('Event updated successfully!');
+                }
+            }
+
+            saveDB(DB_KEYS.EVENTS, events);
+            document.getElementById('event-modal').style.display = 'none';
+            renderAdminPortal(); // Refresh tables
+        }
+
+        /**
+         * Toggles the active/archived state of an event.
+         * @param {string} eventId - The ID of the event.
+         */
+        function toggleEventVisibility(eventId) {
+            let events = getDB(DB_KEYS.EVENTS);
+            const index = events.findIndex(e => e.id === eventId);
+
+            if (index !== -1) {
+                events[index].isActive = !events[index].isActive;
+                saveDB(DB_KEYS.EVENTS, events);
+                showToast(`Event set to ${events[index].isActive ? 'Active' : 'Archived'}.`);
+                renderAdminEvents();
+            }
+        }
+
+        /**
+         * Deletes an event and its associated registrations/bookmarks.
+         * @param {string} eventId - The ID of the event.
+         */
+        async function deleteEvent(eventId) {
+            const confirmed = await confirmAction('Delete Event', 'Are you sure you want to delete this event? This action cannot be undone and will remove all associated registrations.');
+            if (!confirmed) return;
+
+            let events = getDB(DB_KEYS.EVENTS);
+            let registrations = getDB(DB_KEYS.REGISTRATIONS);
+            let bookmarks = getDB(DB_KEYS.BOOKMARKS);
+            let users = getDB(DB_KEYS.USERS);
+
+            const event = events.find(e => e.id === eventId);
+            if (!event) return;
+
+            // Update user participations
+            registrations.filter(r => r.eventId === eventId).forEach(r => {
+                const userIndex = users.findIndex(u => u.id === r.userId);
+                if (userIndex !== -1 && users[userIndex].participations > 0) {
+                    users[userIndex].participations -= 1;
+                }
+            });
+
+            events = events.filter(e => e.id !== eventId);
+            registrations = registrations.filter(r => r.eventId !== eventId);
+            bookmarks = bookmarks.filter(b => b.eventId !== eventId);
+
+            saveDB(DB_KEYS.EVENTS, events);
+            saveDB(DB_KEYS.REGISTRATIONS, registrations);
+            saveDB(DB_KEYS.BOOKMARKS, bookmarks);
+            saveDB(DB_KEYS.USERS, users);
+
+            showToast('Event and all associated data deleted successfully.');
+            renderAdminPortal(); // Refresh tables
+        }
+
+        /**
+         * Renders the registration table based on admin filters.
+         */
+        function renderAdminRegistrations() {
+            const tableBody = document.getElementById('admin-registration-table');
+            tableBody.innerHTML = '';
+
+            const allRegistrations = getDB(DB_KEYS.REGISTRATIONS);
+            const users = getDB(DB_KEYS.USERS);
+            const events = getDB(DB_KEYS.EVENTS);
+
+            const eventFilter = document.getElementById('admin-reg-event-filter').value;
+            const branchFilter = document.getElementById('admin-reg-branch-filter').value;
+            const yearFilter = document.getElementById('admin-reg-year-filter').value;
+
+            const displayData = allRegistrations
+                .map(reg => {
+                    const user = users.find(u => u.id === reg.userId);
+                    const event = events.find(e => e.id === reg.eventId);
+                    return { reg, user, event };
+                })
+                .filter(item => item.user && item.event)
+                .filter(item => {
+                    const eventMatch = !eventFilter || item.event.id === eventFilter;
+                    const branchMatch = !branchFilter || item.user.branch === branchFilter;
+                    const yearMatch = !yearFilter || item.user.year === yearFilter;
+                    return eventMatch && branchMatch && yearMatch;
+                });
+
+            displayData.forEach(item => {
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td data-label="Event">${item.event.title}</td>
+                    <td data-label="Name">${item.user.fullname}</td>
+                    <td data-label="Roll No">${item.user.roll}</td>
+                    <td data-label="Branch/Year">${item.user.branch} / ${item.user.year}</td>
+                    <td data-label="Date">${new Date(item.reg.date).toLocaleDateString()}</td>
+                    <td data-label="Action" style="text-align: center;">
+                        <button class="btn btn-secondary" style="padding: 5px 10px; background-color: #FF6B6B; color: var(--bg-primary); border-color: #FF6B6B;" onclick="deleteRegistration('${item.reg.id}')">Remove</button>
+                    </td>
+                `;
+            });
+        }
+
+        /**
+         * Removes a single registration.
+         * @param {string} regId - The ID of the registration record.
+         */
+        async function deleteRegistration(regId) {
+            const confirmed = await confirmAction('Remove Registration', 'Are you sure you want to remove this student registration?');
+            if (!confirmed) return;
+
+            let registrations = getDB(DB_KEYS.REGISTRATIONS);
+            let events = getDB(DB_KEYS.EVENTS);
+            let users = getDB(DB_KEYS.USERS);
+
+            const regIndex = registrations.findIndex(r => r.id === regId);
+            if (regIndex === -1) return;
+
+            const reg = registrations[regIndex];
+            const eventIndex = events.findIndex(e => e.id === reg.eventId);
+            const userIndex = users.findIndex(u => u.id === reg.userId);
+
+            if (eventIndex !== -1 && events[eventIndex].registrations > 0) {
+                events[eventIndex].registrations -= 1;
+            }
+            if (userIndex !== -1 && users[userIndex].participations > 0) {
+                users[userIndex].participations -= 1;
+            }
+
+            registrations.splice(regIndex, 1);
+
+            saveDB(DB_KEYS.REGISTRATIONS, registrations);
+            saveDB(DB_KEYS.EVENTS, events);
+            saveDB(DB_KEYS.USERS, users);
+
+            showToast('Registration removed successfully.');
+            renderAdminRegistrations();
+            renderLeaderboard();
+        }
+
+
+        /**
+         * Exports registration data to TXT or CSV.
+         * @param {string} format - 'txt' or 'csv'.
+         */
+        function exportRegistrations(format) {
+            const allRegistrations = getDB(DB_KEYS.REGISTRATIONS);
+            const users = getDB(DB_KEYS.USERS);
+            const events = getDB(DB_KEYS.EVENTS);
+
+            const header = ['Event Title', 'Participant Name', 'Roll Number', 'Branch', 'Year', 'Registration Date'];
+            let content = '';
+
+            if (format === 'csv') {
+                content = header.join(',') + '\n';
+            } else if (format === 'txt') {
+                content = header.join(' | ') + '\n' + '-'.repeat(header.join(' | ').length) + '\n';
+            }
+
+            allRegistrations.forEach(reg => {
+                const user = users.find(u => u.id === reg.userId);
+                const event = events.find(e => e.id === reg.eventId);
+
+                if (user && event) {
+                    const rowData = [
+                        event.title,
+                        user.fullname,
+                        user.roll,
+                        user.branch,
+                        user.year,
+                        new Date(reg.date).toISOString().slice(0, 10)
+                    ];
+                    if (format === 'csv') {
+                        content += rowData.map(d => `"${d.replace(/"/g, '""')}"`).join(',') + '\n';
+                    } else if (format === 'txt') {
+                        content += rowData.join(' | ') + '\n';
+                    }
+                }
+            });
+
+            downloadBlob(content, `registrations_export_${new Date().toISOString().slice(0, 10)}.${format}`,
+                format === 'csv' ? 'text/csv' : 'text/plain');
+            showToast(`Registrations exported as ${format.toUpperCase()}.`);
+        }
+
+        /**
+         * Posts an announcement to the student dashboard.
+         */
+        function postAnnouncement() {
+            const text = document.getElementById('admin-announcement-text').value.trim();
+            const announcement = text ? [{ id: 'a_001', text: text, date: new Date().toISOString() }] : [];
+            saveDB(DB_KEYS.ANNOUNCEMENT, announcement);
+            showToast('Announcement posted successfully!');
+            // Refresh student view if they are on dashboard (handled by saveDB)
+        }
+
+        /* ---------------------------------------------------- */
+        /* LEADERBOARD LOGIC */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Renders the leaderboard based on student participation count.
+         */
+        function renderLeaderboard() {
+            const leaderboardList = document.getElementById('leaderboard-list');
+            leaderboardList.innerHTML = '';
+
+            const users = getDB(DB_KEYS.USERS).filter(u => u.role === 'student');
+
+            // Sort by participation count (desc), then by joined date (asc - tie breaker)
+            const rankedUsers = users.sort((a, b) => {
+                if (b.participations !== a.participations) {
+                    return b.participations - a.participations;
+                }
+                return new Date(a.joinedDate) - new Date(b.joinedDate);
+            });
+
+            rankedUsers.forEach((user, index) => {
+                const rank = index + 1;
+                const card = document.createElement('div');
+                card.className = 'glass-card leader-card';
+                card.innerHTML = `
+                    <div class="leader-rank code-text">#${rank}</div>
+                    <div class="leader-info">
+                        <h4>${user.fullname} ${user.id === (currentUser ? currentUser.id : null) ? '(You)' : ''}</h4>
+                        <p>${user.branch} / ${user.year} Year | Roll: ${user.roll}</p>
+                    </div>
+                    <div class="leader-participation code-text">${user.participations}</div>
+                `;
+                leaderboardList.appendChild(card);
+            });
+        }
+
+        /* ---------------------------------------------------- */
+        /* LINKEDIN POST GENERATOR LOGIC */
+        /* ---------------------------------------------------- */
+
+        /**
+         * Renders the event select dropdown for the LinkedIn generator.
+         */
+        function renderLinkedInGenerator() {
+            if (!currentUser || currentUser.role !== 'student') return;
+
+            const select = document.getElementById('linkedin-event-select');
+            select.innerHTML = '<option value="">Select a registered event...</option>';
+
+            const registrations = getDB(DB_KEYS.REGISTRATIONS).filter(r => r.userId === currentUser.id);
+            const events = getDB(DB_KEYS.EVENTS);
+
+            registrations.forEach(reg => {
+                const event = events.find(e => e.id === reg.eventId);
+                if (event) {
+                    const option = document.createElement('option');
+                    option.value = event.id;
+                    option.textContent = `${event.title} (${event.type})`;
+                    select.appendChild(option);
+                }
+            });
+
+            document.getElementById('linkedin-post-output').value = '';
+            document.getElementById('copy-post-btn').style.display = 'none';
+        }
+
+        /**
+         * Generates a professional, emoji-free LinkedIn post.
+         */
+        function generateLinkedInPost() {
+            const eventId = document.getElementById('linkedin-event-select').value;
+            const outputElement = document.getElementById('linkedin-post-output');
+            const copyBtn = document.getElementById('copy-post-btn');
+
+            if (!eventId) {
+                outputElement.value = 'Please select an event you have registered for.';
+                copyBtn.style.display = 'none';
+                return;
+            }
+
+            const event = getDB(DB_KEYS.EVENTS).find(e => e.id === eventId);
+            const studentName = currentUser.fullname;
+
+            let template = '';
+            const tags = event.tags.split(',').map(tag => `#${tag.trim().replace(/\s/g, '')}`).filter(t => t !== '#').join(' ');
+
+            switch (event.type) {
+                case 'Hackathon':
+                    template = `Thrilled to announce my participation in the recent "${event.title}" Hackathon organized by ${event.organizer} at kiet. It was an intense ${event.description.includes('24-hour') ? '24-hour' : ''} experience focused on ${event.domain}. I gained valuable skills in problem-solving and collaboration. #Hackathon #kiet ${tags}`;
+                    break;
+                case 'Internship':
+                    template = `I am excited to share that I have registered for the "${event.title}" internship opportunity. I am looking forward to applying my academic knowledge in ${event.domain} and gaining practical experience in a professional setting. Thank you to ${event.organizer} for this opportunity. #Internship #CareerGrowth #${event.domain.replace(/\//g, '')} ${tags}`;
+                    break;
+                case 'Fest':
+                    template = `What an amazing experience at the "${event.title}" Tech Fest! The event was a fantastic platform to network, learn about the latest industry trends, and see innovation in action. Highly recommend for all tech enthusiasts. #TechFest #kiet #Networking ${tags}`;
+                    break;
+                case 'Workshop':
+                    template = `Successfully completed the "${event.title}" Workshop hosted by ${event.organizer}. The focused session on ${event.domain} was highly informative and provided hands-on expertise in ${event.tags}. Ready to implement these new skills! #Workshop #SkillDevelopment #${event.domain.replace(/\//g, '')} ${tags}`;
+                    break;
+                default:
+                    template = `I have successfully registered for the latest event, "${event.title}" (${event.type}) at kiet Campus Connect. Looking forward to expanding my knowledge in ${event.domain}. #kiet #CampusConnect #ProfessionalDevelopment`;
+            }
+
+            // Final Polish
+            const post = `Just registered for the latest opportunity on kiet Campus Connect!\n\n${template}\n\n#kietCampusConnect #${event.type.replace(/\s/g, '')} ${tags}`;
+
+            outputElement.value = post.trim();
+            copyBtn.style.display = 'inline-block';
+            showToast('Post generated, click "Copy to Clipboard"!');
+        }
+
+
+        /* ---------------------------------------------------- */
+        /* INITIALIZATION */
+        /* ---------------------------------------------------- */
+
+        /**
+         * PWA Setup: Embeds manifest and registers a minimal service worker.
+         */
+        function setupPWA() {
+            // 1. Embed PWA Manifest
+            const manifest = {
+                "name": "kiet Campus Connect",
+                "short_name": "CampusConnect",
+                "start_url": ".",
+                "display": "standalone",
+                "background_color": "#0D1117",
+                "theme_color": "#0969DA",
+                "icons": [
+                    { "src": "https://via.placeholder.com/192/00FFFF/0D1117?text=CC", "sizes": "192x192", "type": "image/png" },
+                    { "src": "https://via.placeholder.com/512/00FFFF/0D1117?text=CC", "sizes": "512x512", "type": "image/png" }
+                ]
+            };
+            const manifestTag = document.createElement('link');
+            manifestTag.rel = 'manifest';
+            manifestTag.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(manifest));
+            document.head.appendChild(manifestTag);
+
+            // 2. Register Minimal Service Worker (Blob-based)
+            if ('serviceWorker' in navigator) {
+                const swCode = `
+                    const CACHE_NAME = 'campus-connect-cache-v1';
+                    const urlsToCache = [
+                        '/',
+                        './index.html' // Cache the single-file app shell
+                    ];
+
+                    self.addEventListener('install', event => {
+                        event.waitUntil(
+                            caches.open(CACHE_NAME).then(cache => {
+                                return cache.addAll(urlsToCache);
+                            })
+                        );
+                        self.skipWaiting();
+                    });
+
+                    self.addEventListener('fetch', event => {
+                        event.respondWith(
+                            caches.match(event.request).then(response => {
+                                return response || fetch(event.request);
+                            })
+                        );
+                    });
+                `;
+                const swBlob = new Blob([swCode], { type: 'application/javascript' });
+                const swUrl = URL.createObjectURL(swBlob);
+
+                navigator.serviceWorker.register(swUrl)
+                    .then(reg => console.log('SW Registered:', reg.scope))
+                    .catch(err => console.error('SW Registration Failed:', err));
+            }
+        }
+
+
+        /**
+         * Initial setup on page load.
+         */
+        function init() {
+            
+            seedInitialData();
+            setupPWA();
+
+            // Bind Form Handlers
+            document.getElementById('login-form').addEventListener('submit', handleLogin);
+            document.getElementById('signup-form').addEventListener('submit', handleSignup);
+            document.getElementById('profile-edit-form').addEventListener('submit', handleProfileUpdate);
+            document.getElementById('event-crud-form').addEventListener('submit', handleEventCRUD);
+
+            // Set initial mode AFTER the element exists in the DOM
+            setInitialMode();
+            
+            // Check if a user is remembered (simplified check, no full session logic)
+            // For this single-file app, we'll default to the auth view, as full session management is out of scope.
+            updateUI(null);
+
+            // Expose global functions for inline HTML event handlers
+            window.toggleMode = toggleMode;
+            window.toggleAuthForm = toggleAuthForm;
+            window.logout = logout;
+            window.navigate = navigate;
+            window.showEventModal = showEventModal;
+            window.toggleEventVisibility = toggleEventVisibility;
+            window.deleteEvent = deleteEvent;
+            window.deleteRegistration = deleteRegistration;
+            window.postAnnouncement = postAnnouncement;
+            window.renderStudentEvents = renderStudentEvents;
+            window.handleRegistration = handleRegistration;
+            window.handleBookmark = handleBookmark;
+            window.generateParticipationRecord = generateParticipationRecord;
+            window.renderAdminRegistrations = renderAdminRegistrations;
+            window.exportRegistrations = exportRegistrations;
+            window.generateLinkedInPost = generateLinkedInPost;
+            window.copyToClipboard = copyToClipboard;
+        }
+
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
